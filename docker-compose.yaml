@@ -1,0 +1,29 @@
+version: '3'
+
+services: 
+  mysql:
+    image: mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: caiyun
+      MYSQL_USER: caiyun
+      MYSQL_PASSWORD: caiyun_password
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  server:
+    build: ../caiyun-server
+    image: caiyun/server
+    ports: 
+      - 80:8080
+    depends_on: 
+      - mysql
